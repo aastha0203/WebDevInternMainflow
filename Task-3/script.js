@@ -1,6 +1,21 @@
-/*dynamic content update(events are updated by clicking the slider buttons) */
 document.addEventListener('DOMContentLoaded', function() {
-    
+    // Utility function to escape HTML to prevent XSS attacks
+    function escapeHTML(str) {
+        return str.replace(/[&<>"'`=\/]/g, function(s) {
+            return ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+                '/': '&#x2F;',
+                '`': '&#x60;',
+                '=': '&#x3D;'
+            })[s];
+        });
+    }
+
+    // Event slider functionality
     const eventCardsContainer = document.querySelector('.event-cards');
     const sliderPrev = document.getElementById('slider-prev');
     const sliderNext = document.getElementById('slider-next');
@@ -13,19 +28,19 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
 
         let eventIndex = 0;
-
+    // Function to add an event to the DOM, escaping HTML to prevent XSS
         function addEvent(event) {
             const eventCard = document.createElement('div');
             eventCard.className = 'event-card';
             eventCard.innerHTML = `
-                <h3>${event.title}</h3>
-                <p>${event.description}</p>
-                <p>Date: ${event.date}</p>
-                <p>Location: ${event.location}</p>
+                <h3>${escapeHTML(event.title)}</h3>
+                <p>${escapeHTML(event.description)}</p>
+                <p>Date: ${escapeHTML(event.date)}</p>
+                <p>Location: ${escapeHTML(event.location)}</p>
             `;
             eventCardsContainer.appendChild(eventCard);
         }
-
+    //function to load next event
         function loadNextEvent() {
             if (eventIndex < events.length) {
                 addEvent(events[eventIndex]);
@@ -52,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadNextEvent();
     }
 
-    /*form validation in login and signup form*/
+    // Signup form validation
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', function(event) {
@@ -78,8 +93,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function validateSignupForm() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            // Escape user input to prevent XSS
+            const email = escapeHTML(document.getElementById('email').value);
+            const password = escapeHTML(document.getElementById('password').value);
             let isValid = true;
             const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
             const emailError = document.getElementById('email-error');
@@ -104,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    
+    // Login form validation
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', function(event) {
@@ -115,8 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function validateLoginForm() {
-            const email = document.getElementById('email1').value;
-            const password = document.getElementById('password1').value;
+            const email = escapeHTML(document.getElementById('email1').value);
+            const password = escapeHTML(document.getElementById('password1').value);
             let isValid = true;
             const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
             const emailError = document.getElementById('email-error1');
@@ -140,7 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return isValid;
         }
     }
-      // Dropdown menu functionality
+
+    // Dropdown menu functionality
     const helpCentre = document.querySelector('.help-centre');
     const dropdownMenu = document.querySelector('.dropdown-menu');
 
